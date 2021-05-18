@@ -10,6 +10,7 @@ public class UserRepository {
 
     private final DataBaseConnection dbl = new DataBaseConnection();
 
+    //registration method
     public void registration (User user) throws Exception{
         String sql = "INSERT INTO saugumas." + Constant_DB.USER_TABLE + "( " + Constant_DB.USER_LOGIN + "," +
                 Constant_DB.USER_PASSWORD + "," + Constant_DB.USER_FILE_URL + ") VALUES (?,?,?)";
