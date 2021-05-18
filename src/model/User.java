@@ -19,6 +19,12 @@ public class User {
         this.url = url;
     }
 
+
+    public User(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
+
     public int getId() {
         return id;
     }
