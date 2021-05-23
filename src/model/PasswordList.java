@@ -1,16 +1,37 @@
 package model;
 
+import javafx.scene.control.Button;
+
 public class PasswordList {
     private String login;
     private String password;
     private String url_Site;
     private String more_Information;
+    private Button btn;
 
     public PasswordList(String login, String password, String url_Site, String more_Information) {
         this.login = login;
         this.password = password;
         this.url_Site = url_Site;
         this.more_Information = more_Information;
+
+    }
+
+    public PasswordList(String login, String password, String url_Site, String more_Information,Button btn) {
+        this.login = login;
+        this.password = password;
+        this.url_Site = url_Site;
+        this.more_Information = more_Information;
+        this.btn = btn;
+        btn.setText("Show");
+    }
+
+    public Button getBtn() {
+        return btn;
+    }
+
+    public void setBtn(Button btn) {
+        this.btn = btn;
     }
 
     public String getLogin() {

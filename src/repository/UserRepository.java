@@ -11,9 +11,12 @@ public class UserRepository {
 
     private final DataBaseConnection dbl = new DataBaseConnection();
     private User userLogIn;
+    private md5Hesh md5H = new md5Hesh();
 
     //registration method
     public void registration (User user) throws Exception{
+        String heshPassword = md5Hesh.md5(user.getPassword());
+
         String sql1 = "SELECT login FROM saugumas." + Constant_DB.USER_TABLE + " WHERE (" +
         Constant_DB.USER_LOGIN + "=?)";
         PreparedStatement prst1 = dbl.getDbConnection().prepareStatement(sql1);
@@ -32,7 +35,7 @@ public class UserRepository {
 
         PreparedStatement prst = dbl.getDbConnection().prepareStatement(sql);
         prst.setString(1,user.getLogin());
-        prst.setString(2,user.getPassword());
+        prst.setString(2,heshPassword);
         prst.setString(3,user.getUrl());
 
         prst.executeUpdate();
@@ -43,8 +46,9 @@ public class UserRepository {
         this.userLogIn = user;
     }
 
-    public void userSingIn(String login,String password) throws Exception{
-        String sql1 = "SELECT login FROM saugumas." + Constant_DB.USER_TABLE + " WHERE (" +
+    public String userSingIn(String login,String password) throws Exception{
+        String heshPassword = md5Hesh.md5(password);
+        String sql1 = "SELECT * FROM saugumas." + Constant_DB.USER_TABLE + " WHERE (" +
                 Constant_DB.USER_LOGIN + "=? AND " + Constant_DB.USER_PASSWORD + "=?)";
 
         User user = null;
@@ -52,7 +56,7 @@ public class UserRepository {
         PreparedStatement prst1 = dbl.getDbConnection().prepareStatement(sql1);
         int count = 0;
         prst1.setString(1,login);
-        prst1.setString(2, password);
+        prst1.setString(2, heshPassword);
         ResultSet resultSet = prst1.executeQuery();
         while(resultSet.next()){
             count++;
@@ -64,10 +68,14 @@ public class UserRepository {
         }
 
         if(count == 0){
-            throw new Exception("login is not registration");
+            throw new Exception("login is not registration or not correct password");
         }
         this.setUserLogIn(user);
 
+        return user.getLogin();
     }
 
+    public User getUserLogIn() {
+        return userLogIn;
+    }
 }
