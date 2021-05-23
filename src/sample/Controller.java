@@ -7,9 +7,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import model.PasswordList;
 import model.User;
 import repository.UserRepository;
@@ -58,19 +62,6 @@ public class Controller {
 
     @FXML
     private Pane updatePasswordPane;
-
-    @FXML
-    private TextField loginUpdatePasswordPane;
-
-    @FXML
-    private TextField passwordUpdatePasswordPane;
-
-    @FXML
-    private TextField urlUpdatePasswordPane;
-
-    @FXML
-    private TextField moreInforUpdatePasswordPane;
-
 
     @FXML
     private Button signInButton;
@@ -284,20 +275,23 @@ public class Controller {
 
     @FXML
     void aLLUpdatePasswordPane(ActionEvent event) {
+        updateTableList.getItems().clear();
         updateTableList.getItems().addAll(passwordRepository.getPasswordList());
     }
 
 
     @FXML
     void updateButtonClickPane(ActionEvent event) throws Exception {
-        passwordRepository.updatePassword(new PasswordList(loginUpdatePasswordPane.getText(),passwordUpdatePasswordPane.getText(),
-                urlUpdatePasswordPane.getText(),moreInforUpdatePasswordPane.getText()));
-
-        loginUpdatePasswordPane.clear();
-        passwordUpdatePasswordPane.clear();
-        urlUpdatePasswordPane.clear();
-        moreInforUpdatePasswordPane.clear();
-
+        PasswordList pass = updateTableList.getSelectionModel().getSelectedItem();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../sample/updateWindow.fxml"));
+        Parent parent = fxmlLoader.load();
+        updateController up = fxmlLoader.getController();
+        up.setPass(pass,passwordRepository.getPasswordList(),updateTableList);
+        Stage stage = new Stage();
+        stage.setTitle("Update");
+        stage.setScene(new Scene(parent));
+        stage.setResizable(false);
+        stage.show();
     }
 
     @FXML
@@ -327,6 +321,7 @@ public class Controller {
 
     @FXML
     void deletePasswordButtonPane(ActionEvent event) {
+        passwordListDeleteTable.getItems().clear();
         newPasswordPane.setVisible(false);
         findPasswordPane.setVisible(false);
         updatePasswordPane.setVisible(false);
@@ -335,10 +330,33 @@ public class Controller {
 
     @FXML
     void findPasswordButtonPane(ActionEvent event) {
+        passwordListTable.getItems().clear();
         newPasswordPane.setVisible(false);
         findPasswordPane.setVisible(true);
         updatePasswordPane.setVisible(false);
         deletePasswordPane.setVisible(false);
+    }
+
+    @FXML
+    void allPAsswordButtonFind(ActionEvent event) {
+        List<PasswordList> newpassList = passwordRepository.getPasswordList();
+        List<PasswordList> newPasList = new ArrayList<>();
+        this.btn = new Button[newpassList.size()];
+        int i = 0;
+        for(PasswordList pass : newpassList){
+            btn[i]= new Button();
+            btn[i].setOnAction(this::hendleButtonAction);
+            newPasList.add(new PasswordList(pass.getLogin(),pass.getPassword(),pass.getUrl_Site(),pass.getMore_Information(),btn[i]));
+            i++;
+        }
+
+
+        passwordListTable.getItems().clear();
+        passwordListTable.getItems().addAll(newPasList);
+        this.listPAss = newPasList;
+
+        newpassList = null;
+        loginFindPane.clear();
     }
 
     @FXML
@@ -351,6 +369,7 @@ public class Controller {
 
     @FXML
     void updatePasswordButtonPane(ActionEvent event) {
+        updateTableList.getItems().clear();
         newPasswordPane.setVisible(false);
         findPasswordPane.setVisible(false);
         updatePasswordPane.setVisible(true);

@@ -46,6 +46,7 @@ public class passwordRepository {
                 result = null;
 
         }
+        //if remove file.delete() file .txt is stay
         file.delete();
         this.inPassList(passwordList);
     }
@@ -58,23 +59,6 @@ public class passwordRepository {
         this.pass = null;
     }
 
-    public void updatePassword(PasswordList pas) throws Exception {
-        int count = 0;
-
-        for(PasswordList pass : pass) {
-            if (pass.getLogin().equals(pas.getLogin())) {
-                count++;
-                pass.setPassword(pas.getPassword());
-                pass.setMore_Information(pas.getMore_Information());
-                pass.setUrl_Site(pas.getUrl_Site());
-                JOptionPane.showMessageDialog(null, "Information Update");
-                break;
-            }
-        }
-            if(count != 0){
-               JOptionPane.showMessageDialog(null,"Not have this login");
-            }
-        }
 
         public List<PasswordList> getLoginPasswordList(String login) throws Exception {
         List<PasswordList> pasList = new ArrayList<>();
